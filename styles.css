@@ -1,0 +1,285 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Cinzel', serif;
+    font-family: 'M PLUS 1p', sans-serif;
+    font-weight: 750;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+    background-image: url('https://wallpapercave.com/w/wp10597286.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#landing-page {
+    height: 100%;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#landing-page #landing-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 5%;
+    /* From https://css.glass */
+    background: rgba(255, 255, 255, 0);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(12.4px);
+    -webkit-backdrop-filter: blur(12.4px);
+    border-radius: 12px;
+    color: #FFFFFF;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.15);
+
+}
+
+#landing-page #landing-content #welcome {
+    font-weight: bolder;
+}
+
+#landing-page #landing-content #guide {
+    font-size: 13px;
+    font-weight: bolder;
+}
+
+
+#landing-page #landing-content #guide2 {
+    font-size: 13px;
+    font-weight: bolder;
+    display: none;
+}
+
+
+#landing-page input {
+    border-radius: 12px;
+    height: 25px;
+    margin: 2% 0 2% 0;
+    outline: none;
+    border: none;
+    background-color: black;
+    color: white;
+    padding: 0% 2% 0% 2%;
+}
+
+#landing-page input::placeholder {
+    color: #959090;
+}
+
+#landing-page button {
+    all: unset;
+    font-size: 12px;
+    background-color: red;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    width: auto;
+    padding: 2% 4% 2% 4%;
+    border-radius: 5px;
+    color: rgb(0, 0, 0);
+}
+
+
+#landing-page #player-name-container {
+    display: none;
+}
+
+#game-page {
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(12.4px);
+    -webkit-backdrop-filter: blur(12.4px);
+    width: 80vw;
+    color: #FFFFFF;
+    height: auto;
+    padding: 4% 4% 4% 4%;
+    display: none;
+    user-select: none;
+}
+
+#game-page #info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+
+#game-page #turn {
+    text-align: center;
+}
+
+#game-page #board {
+    margin: 5% auto 0 auto;
+    width: 80%;
+    aspect-ratio: 1/1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    row-gap: 5px;
+    column-gap: 5px
+}
+
+#game-page #board .tile {
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: red;
+    border-radius: 12px;
+    display: grid;
+    place-content: center;
+    font-size: -webkit-xxx-large;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Loading Styles and animation */
+#loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5% 0 0 0;
+    display: none;
+}
+
+#lds-roller {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+#lds-roller div {
+    animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    transform-origin: 40px 40px;
+}
+
+#lds-roller div:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgb(255, 0, 0);
+    margin: -4px 0 0 -4px;
+}
+
+#lds-roller div:nth-child(1) {
+    animation-delay: -0.036s;
+}
+
+#lds-roller div:nth-child(1):after {
+    top: 63px;
+    left: 63px;
+}
+
+#lds-roller div:nth-child(2) {
+    animation-delay: -0.072s;
+}
+
+#lds-roller div:nth-child(2):after {
+    top: 68px;
+    left: 56px;
+}
+
+#lds-roller div:nth-child(3) {
+    animation-delay: -0.108s;
+}
+
+#lds-roller div:nth-child(3):after {
+    top: 71px;
+    left: 48px;
+}
+
+#lds-roller div:nth-child(4) {
+    animation-delay: -0.144s;
+}
+
+#lds-roller div:nth-child(4):after {
+    top: 72px;
+    left: 40px;
+}
+
+#lds-roller div:nth-child(5) {
+    animation-delay: -0.18s;
+}
+
+#lds-roller div:nth-child(5):after {
+    top: 71px;
+    left: 32px;
+}
+
+#lds-roller div:nth-child(6) {
+    animation-delay: -0.216s;
+}
+
+#lds-roller div:nth-child(6):after {
+    top: 68px;
+    left: 24px;
+}
+
+#lds-roller div:nth-child(7) {
+    animation-delay: -0.252s;
+}
+
+#lds-roller div:nth-child(7):after {
+    top: 63px;
+    left: 17px;
+}
+
+#lds-roller div:nth-child(8) {
+    animation-delay: -0.288s;
+}
+
+#lds-roller div:nth-child(8):after {
+    top: 56px;
+    left: 12px;
+}
+
+@keyframes lds-roller {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

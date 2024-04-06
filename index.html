@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel&family=M+PLUS+1p:wght@100&family=Montserrat:wght@200&family=Oswald:wght@300&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <title>Tic Tac Toe</title>
+</head>
+
+
+
+<body>
+    <div id="landing-page">
+        <div id="landing-content">
+            <p id="welcome">Welcome, let's play the classic Tic-Tac-Toe</p>
+            <p id="guide">Please enter your name below</p>
+            <span id="player-name-container">Hello <span id="player-name-landing"></span>!!</span>
+            <p id="guide2">Searchning for your opponent, kindly wait...</p>
+            <input type="text" id="user-name" placeholder="Enter your name..." autocomplete="off">
+            <button id="search-opponent">Search Opponent</button>
+
+            <div id="loading">
+                <div id="lds-roller">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <div id="game-page">
+        <p id="intro">Let's begin playing</p>
+        <div id="info">
+            <span>You - <span id="player-name"></span></span>
+            <span>Opponent - <span id="opp-name"></span></span>
+        </div>
+        <p id="turn"></p>
+        <div id="board">
+            <div id="tile1" class="tile"></div>
+            <div id="tile2" class="tile"></div>
+            <div id="tile3" class="tile"></div>
+            <div id="tile4" class="tile"></div>
+            <div id="tile5" class="tile"></div>
+            <div id="tile6" class="tile"></div>
+            <div id="tile7" class="tile"></div>
+            <div id="tile8" class="tile"></div>
+            <div id="tile9" class="tile"></div>
+        </div>
+    </div>
+</body>
+
+
+<script>
+
+    const socket = io()
+    console.log(socket)
+
+
+
+    let landingPage = document.getElementById('landing-page')
+    let searchOppBtn = document.getElementById('search-opponent')
+    let userName = document.getElementById('user-name')
+    let gamePage = document.getElementById('game-page')
+    let guide = document.getElementById('guide')
+    let guide2 = document.getElementById('guide2')
+    let playerName = document.getElementById('player-name')
+    let oppName = document.getElementById('opp-name')
+    let playerNameLanding = document.getElementById('player-name-landing')
+    let playerNameCont = document.getElementById('player-name-container')
+    let turn = document.getElementById('turn')
+    let tiles = document.querySelectorAll('.tile')
+    let gameIntroText = document.getElementById('intro')
+    let loadingAnimation = document.getElementById('loading')
+
+
+    let user_name
+    let currPlayer
+    let opponentName
+    let value
+    let foundObj
+
+
+
+    searchOppBtn.addEventListener('click', () => {
+        user_name = userName.value
+        if (user_name === '' || !user_name) {
+            alert("Please enter your name")
+        } else {
+
+            searchOppBtn.style.display = "none"
+            userName.style.display = "none"
+            guide.style.display = "none"
+            guide2.style.display = "block"
+            loadingAnimation.style.display = 'block'
+            playerNameCont.style.display = 'block'
+            playerNameLanding.innerText = user_name
+            socket.emit("find", { name: user_name })
+
+
+
+        }
+    })
+
+
+
+    function fillTicTacToe() {
+        if (event.currentTarget.innerHTML === '') {
+            event.currentTarget.innerHTML = currPlayer;
+            socket.emit("playing", { value: value, id: event.currentTarget.id, name: user_name, currPId: currPlayerId })
+        }
+    }
+
+
+    tiles.forEach((t, index) => {
+        t.addEventListener('click', function () {
+            t.innerText = value
+            socket.emit("playing", { value: value, id: t.id, name: user_name })
+        })
+    })
+
+
+    socket.on("find", (e) => {
+        if (e.allPlayers) {
+            let allPlayersArray = e.allPlayers
+            landingPage.style.display = "none"
+            gamePage.style.display = "block"
+            foundObj = allPlayersArray.find((obj) => {
+                return obj.p1.p1Name === user_name || obj.p2.p2Name === user_name
+            })
+            currPlayer = foundObj.p1.p1Name
+            currPlayerId = foundObj.p1Id
+            if (foundObj.p1.p1Name === user_name) {
+                opponentName = foundObj.p2.p2Name
+                value = foundObj.p2.p2Value
+            } else {
+                opponentName = foundObj.p1.p1Name
+                value = foundObj.p1.p1Value
+            }
+
+            oppName.innerText = opponentName
+            playerName.innerText = user_name
+            turn.innerText = currPlayer === user_name ? `Your turn` : `${currPlayer}'s turn`
+
+        }
+    })
+
+
+    socket.on('playing', (e) => {
+        foundObj = e.allPlayers.find((obj) => {
+            return obj.p1.p1Name === user_name || obj.p2.p2Name === user_name
+        })
+        console.log('foundObj--> ' + JSON.stringify(foundObj))
+        p1Id = foundObj.p1.p1Move
+        p2Id = foundObj.p2.p2Move
+        id = foundObj.id
+        console.log('p1Id-->' + p1Id)
+        console.log('p2Id-->' + p2Id)
+
+
+        if (foundObj.sum % 2 === 0) {
+            currPlayer = foundObj.p2.p2Name
+            currPlayerId = foundObj.p2Id
+        } else {
+            currPlayer = foundObj.p1.p1Name
+            currPlayerId = foundObj.p1Id
+        }
+        turn.innerText = currPlayer === user_name ? `Your turn` : `${currPlayer}'s turn`
+
+        if (p1Id != "") {
+            document.getElementById(p1Id).innerText = 'X'
+            document.getElementById(p1Id).disabled = true
+            document.getElementById(p1Id).style.backgroundColor = "orange"
+        }
+        if (p2Id != "") {
+            document.getElementById(p2Id).innerText = 'O'
+            document.getElementById(p2Id).disabled = true
+            document.getElementById(p2Id).style.backgroundColor = "green"
+        }
+
+        checkWinner(foundObj.p1.p1Name, foundObj.p2.p2Name, foundObj.sum, id)
+    })
+
+    function checkWinner(player1, player2, sum) {
+        let b1 = document.getElementById('tile1').innerText
+        let b2 = document.getElementById('tile2').innerText
+        let b3 = document.getElementById('tile3').innerText
+        let b4 = document.getElementById('tile4').innerText
+        let b5 = document.getElementById('tile5').innerText
+        let b6 = document.getElementById('tile6').innerText
+        let b7 = document.getElementById('tile7').innerText
+        let b8 = document.getElementById('tile8').innerText
+        let b9 = document.getElementById('tile9').innerText
+
+        let winner = ''
+        let message = ''
+        if ((b1 === b2 && b2 === b3 && b3 === 'X') || (b4 === b5 && b5 === b6 && b6 === 'X') || (b7 === b8 && b8 === b9 && b9 === 'X') || (b1 === b4 && b4 === b7 && b7 === 'X') || (b2 === b5 && b5 === b8 && b8 === 'X') || (b3 === b6 && b6 === b9 && b9 === 'X') || (b1 === b5 && b5 === b9 && b9 === 'X') || (b3 === b5 && b5 === b7 && b7 === 'X')) {
+            winner = player1
+            message = `${winner} won the game!`
+
+        } else if ((b1 === b2 && b2 === b3 && b3 === 'O') || (b4 === b5 && b5 === b6 && b6 === 'O') || (b7 === b8 && b8 === b9 && b9 === 'O') || (b1 === b4 && b4 === b7 && b7 === 'O') || (b2 === b5 && b5 === b8 && b8 === 'O') || (b3 === b6 && b6 === b9 && b9 === 'O') || (b1 === b5 && b5 === b9 && b9 === 'O') || (b3 === b5 && b5 === b7 && b7 === 'O')) {
+            winner = player2
+            message = `${winner} won the game!`
+        } else {
+            if (sum === 10) {
+                message = "It is a Draw!"
+            }
+        }
+        if (message) {
+            alert(message)
+            gameIntroText.innerText = message
+            socket.emit('gameOver', {})
+            setTimeout(() => {
+                location.reload()
+                socket.emit('removeGameData', { id: id })
+            }, 4000)
+
+        }
+
+
+
+
+
+
+    }
+
+
+</script>
+
+
+
+</html>
